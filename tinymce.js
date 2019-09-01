@@ -13732,10 +13732,14 @@
         }
       }
       if (wrapped && restoreSelection) {
-        rng.setStart(startContainer, startOffset);
-        rng.setEnd(endContainer, endOffset);
-        selection.setRng(rng);
-        editor.nodeChanged();
+        try {
+          rng.setStart(startContainer, startOffset);
+          rng.setEnd(endContainer, endOffset);
+          selection.setRng(rng);
+          editor.nodeChanged();
+        } catch(err) {
+          if (!err.message || err.message.indexOf('setStart') === -1) throw err;
+        }
       }
     };
     var setup$3 = function (editor) {
