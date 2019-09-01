@@ -20310,7 +20310,12 @@
         return elm;
       };
       var getNode = function () {
-        return getNode$1(editor.getBody(), getRng());
+        try {
+          var node = getNode$1(editor.getBody(), getRng());
+        } catch(err) {
+            if (!err.message || err.message.trim() !== 'Object expected') throw err;
+        }
+        return node;
       };
       var getSelectedBlocks$1 = function (startElm, endElm) {
         return getSelectedBlocks(dom, getRng(), startElm, endElm);
