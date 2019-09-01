@@ -1753,7 +1753,7 @@
       }) : [];
       var files = dataTransfer.files ? from$1(dataTransfer.files) : [];
       var images = filter(items.length > 0 ? items : files, function (file) {
-        return /^image\/(jpeg|png|gif|bmp)$/.test(file.type);
+        return !!file && /^image\/(jpeg|png|gif|bmp)$/.test(file.type);
       });
       return images;
     };
