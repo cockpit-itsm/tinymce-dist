@@ -2167,10 +2167,13 @@
             api.setData({
               src: {
                 value: url,
-                meta: {}
+                meta: { alt: file.name }
               }
             });
-            api.showTab('general');
+            var filenameInput = document.getElementById('tox-image-upload-input-filename');
+            if (filenameInput) {
+              filenameInput.value = file.name;
+            }
             changeSrc(helpers, info, state, api);
             finalize();
           }).catch(function (err) {
@@ -2203,16 +2206,12 @@
       };
     };
     var makeDialogBody = function (info) {
-      if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
-        var tabPanel = {
-          type: 'tabpanel',
-          tabs: flatten([
-            [MainTab.makeTab(info)],
-            info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-            info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
-          ])
+      if (info.hasUploadTab) {
+        var panel = {
+          type: 'panel',
+          items: UploadTab.makeTab(info).items.concat(MainTab.makeItems(info))
         };
-        return tabPanel;
+        return panel;
       } else {
         var panel = {
           type: 'panel',
@@ -2318,6 +2317,27 @@
       var open = function () {
         return collect(editor).map(makeDialog(helpers)).get(function (spec) {
           editor.windowManager.open(spec);
+
+          var content = document.querySelector('.tox-dialog__body-content .tox-form');
+          if (content) {
+            content.childNodes.forEach(child => {
+              if (!child.classList.contains('tox-form__group--stretched')) {
+                child.style.display = 'none';
+              }
+            });
+
+            var filenameInput = document.createElement('input');
+            filenameInput.id = 'tox-image-upload-input-filename';
+            filenameInput.classList.add('tox-textfield');
+            filenameInput.disabled = true;
+            filenameInput.value = spec.initialData.alt;
+
+            var formGroup = document.createElement('div');
+            formGroup.classList.add('tox-form__group');
+
+            formGroup.appendChild(filenameInput);
+            content.parentNode.appendChild(formGroup);
+          }
         });
       };
       return { open: open };
