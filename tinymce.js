@@ -3602,7 +3602,7 @@
     };
     var fromDom = function (node) {
       if (node === null || node === undefined) {
-        throw new Error('Node cannot be null or undefined');
+        throw new Error('Editor Node cannot be null or undefined');
       }
       return { dom: constant(node) };
     };
@@ -6849,7 +6849,7 @@
               parent.appendChild(node);
             }
           } catch(err) {
-              if (!err.message || err.message.trim() !== "Failed to execute 'appendChild' on 'Node': The new child element contains the parent") throw err
+              if (!err.message || err.message.trim() !== "Failed to execute 'appendChild' on 'Node': The new child element contains the parent") throw err;
           }
 
           return node;
