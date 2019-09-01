@@ -6842,11 +6842,16 @@
           var parent, nextSibling;
           parent = referenceNode.parentNode;
           nextSibling = referenceNode.nextSibling;
-          if (nextSibling) {
-            parent.insertBefore(node, nextSibling);
-          } else {
-            parent.appendChild(node);
+          try {
+            if (nextSibling) {
+              parent.insertBefore(node, nextSibling);
+            } else {
+              parent.appendChild(node);
+            }
+          } catch(err) {
+              if (!err.message || err.message.trim() !== "Failed to execute 'appendChild' on 'Node': The new child element contains the parent") throw err
           }
+
           return node;
         });
       };
