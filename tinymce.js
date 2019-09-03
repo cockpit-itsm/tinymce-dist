@@ -23077,6 +23077,7 @@
         trimZwsp(fragment);
         trimLeadingLineBreaks(fragment);
         newBlock = fragment.firstChild;
+        if (!newBlock) insertNewBlockAfter()
         dom.insertAfter(fragment, parentBlock);
         trimInlineElementsOnLeftSideOfBlock(dom, nonEmptyElementsMap, newBlock);
         addBrToBlockIfNeeded(dom, parentBlock);
