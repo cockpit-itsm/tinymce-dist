@@ -2320,7 +2320,7 @@
 
           var content = document.querySelector('.tox-dialog__body-content .tox-form');
           if (content) {
-            content.childNodes.forEach(child => {
+            [].forEach.call(content.childNodes, function(child) {
               if (!child.classList.contains('tox-form__group--stretched')) {
                 child.style.display = 'none';
               }
