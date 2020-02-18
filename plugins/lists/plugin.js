@@ -2047,7 +2047,7 @@
         if (otherLi_2) {
           editor.undoManager.transact(function () {
             removeBlock(dom, block, root);
-            ToggleList.mergeWithAdjacentLists(dom, otherLi_2.parentNode);
+            otherLi_2.parentNode && ToggleList.mergeWithAdjacentLists(dom, otherLi_2.parentNode);
             editor.selection.select(otherLi_2, true);
             editor.selection.collapse(isForward);
           });
