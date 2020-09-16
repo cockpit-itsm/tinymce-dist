@@ -1394,10 +1394,10 @@
           api.setData({
             src: {
               value: url,
-              meta: {}
+              meta: { alt: file.name }
             }
           });
-          api.showTab('general');
+          // api.showTab('general');
           changeSrc(helpers, info, state, api);
         };
         blobToDataUri(file).then(function (dataUrl) {
@@ -1405,6 +1405,10 @@
           if (info.automaticUploads) {
             helpers.uploadImage(blobInfo).then(function (result) {
               updateSrcAndSwitchTab(result.url);
+              var filenameInput = document.getElementById('tox-image-upload-input-filename');
+              if (filenameInput) {
+                filenameInput.value = file.name;
+              }
               finalize();
             }).catch(function (err) {
               finalize();
@@ -1447,16 +1451,12 @@
       };
     };
     var makeDialogBody = function (info) {
-      if (info.hasAdvTab || info.hasUploadUrl || info.hasUploadHandler) {
-        var tabPanel = {
-          type: 'tabpanel',
-          tabs: flatten([
-            [MainTab.makeTab(info)],
-            info.hasAdvTab ? [AdvTab.makeTab(info)] : [],
-            info.hasUploadTab && (info.hasUploadUrl || info.hasUploadHandler) ? [UploadTab.makeTab(info)] : []
-          ])
+      if (info.hasUploadTab) {
+        var panel = {
+          type: 'panel',
+          items: UploadTab.makeTab(info).items.concat(MainTab.makeItems(info))
         };
-        return tabPanel;
+        return panel;
       } else {
         var panel = {
           type: 'panel',
@@ -1574,7 +1574,32 @@
         uploadImage: uploadImage(editor)
       };
       var open = function () {
-        collect(editor).then(makeDialog(helpers)).then(editor.windowManager.open);
+        return collect(editor).then(makeDialog(helpers)).then(function (spec) {
+          var next = editor.windowManager.open(spec);
+
+          var content = document.querySelector('.tox-dialog__body-content .tox-form');
+          if (content) {
+            [].forEach.call(content.childNodes, function(child) {
+              if (!child.classList.contains('tox-form__group--stretched')) {
+                child.style.display = 'none';
+              }
+            });
+
+            var filenameInput = document.createElement('input');
+            filenameInput.id = 'tox-image-upload-input-filename';
+            filenameInput.classList.add('tox-textfield');
+            filenameInput.disabled = true;
+            filenameInput.value = spec.initialData.alt;
+
+            var formGroup = document.createElement('div');
+            formGroup.classList.add('tox-form__group');
+
+            formGroup.appendChild(filenameInput);
+            content.parentNode.appendChild(formGroup);
+
+            return next;
+          }
+        });
       };
       return { open: open };
     };
