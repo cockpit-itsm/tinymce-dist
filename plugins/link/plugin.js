@@ -1268,7 +1268,7 @@
       global.add('link', function (editor) {
         setupButtons(editor);
         setupMenuItems(editor);
-        setupContextMenu(editor);
+        // setupContextMenu(editor);
         setupContextToolbars(editor);
         setupGotoLinks(editor);
         register(editor);
