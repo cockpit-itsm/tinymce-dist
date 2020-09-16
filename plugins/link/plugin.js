@@ -1300,7 +1300,7 @@
       const openLink = setup$1(editor);
       setupButtons(editor, openLink);
       setupMenuItems(editor, openLink);
-      setupContextMenu(editor);
+      // setupContextMenu(editor);
       setupContextToolbars(editor, openLink);
     };
 
