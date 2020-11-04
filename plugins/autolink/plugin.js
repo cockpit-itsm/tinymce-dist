@@ -128,6 +128,7 @@
       var matches = text.match(autoLinkPattern);
       var protocol = getDefaultLinkProtocol(editor);
       if (matches) {
+        var title = matches[1] + matches[2]
         if (matches[1] === 'www.') {
           matches[1] = protocol + '://www.';
         } else if (/@$/.test(matches[1]) && !/^mailto:/.test(matches[1])) {
@@ -135,10 +136,14 @@
         }
         bookmark = editor.selection.getBookmark();
         editor.selection.setRng(rng);
-        editor.execCommand('createlink', false, matches[1] + matches[2]);
-        if (defaultLinkTarget !== false) {
-          editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
-        }
+        // NOTE: Avoid setAttrib because the cursor wraps when pressing space after a a link, and createlink command do not accept a target attribute. So we insertContent manually
+        editor.insertContent(
+          editor.dom.createHTML(
+            'a',
+            { href: matches[1] + matches[2], target: defaultLinkTarget || undefined },
+            editor.dom.encode(title),
+          ),
+        );
         editor.selection.moveToBookmark(bookmark);
         editor.nodeChanged();
       }
