@@ -156,6 +156,7 @@
       var protocol = getDefaultLinkProtocol(editor);
       if (matches) {
         var url = matches[0];
+        var title = url;
         if (startsWith(url, 'www.')) {
           url = protocol + '://' + url;
         } else if (contains(url, '@') && !hasProtocol(url)) {
@@ -163,12 +164,19 @@
         }
         bookmark = editor.selection.getBookmark();
         editor.selection.setRng(rng);
-        editor.execCommand('createlink', false, url);
-        if (defaultLinkTarget !== false) {
-          editor.dom.setAttrib(editor.selection.getNode(), 'target', defaultLinkTarget);
-        }
-        editor.selection.moveToBookmark(bookmark);
-        editor.nodeChanged();
+        // NOTE: Avoid setAttrib because the cursor wraps when pressing space after a a link, and createlink command do not accept a target attribute. So we insertContent manually
+        editor.insertContent(
+          editor.dom.createHTML(
+            'a',
+            { href: url, target: defaultLinkTarget || undefined },
+            editor.dom.encode(title),
+          ),
+        );
+        // NOTE: setTimeout needed for Firefox or it moves to start of editor when multiple lines
+        window.setTimeout(function (){
+          editor.selection.moveToBookmark(bookmark);
+          editor.nodeChanged();
+        });
       }
     };
     var setup = function (editor) {
