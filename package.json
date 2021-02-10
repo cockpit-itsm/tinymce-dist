@@ -1,6 +1,6 @@
 {
 	"name": "tinymce",
-	"version": "5.5.1",
+	"version": "5.5.1-custom17",
 	"repository": {
 		"type": "git",
 		"url": "https://github.com/tinymce/tinymce-dist.git"
