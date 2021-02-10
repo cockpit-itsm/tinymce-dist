@@ -101,7 +101,7 @@
           items: [{
               name: 'id',
               type: 'input',
-              label: 'ID',
+              label: 'Name',
               placeholder: 'example'
             }]
         },
