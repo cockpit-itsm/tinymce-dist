@@ -1242,6 +1242,7 @@
                   editor.dom.setAttrib(anchor, 'href', value);
                   collapseSelectionToEnd(editor);
                   formApi.hide();
+                  openDialog(editor)();
                 });
               }
             }
