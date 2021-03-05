@@ -1243,6 +1243,7 @@
               });
               collapseSelectionToEnd(editor);
               formApi.hide();
+              openDialog(editor)();
             }
           },
           {
